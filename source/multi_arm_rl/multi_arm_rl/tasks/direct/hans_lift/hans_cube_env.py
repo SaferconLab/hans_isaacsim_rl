@@ -356,16 +356,19 @@ class HansCubeEnv(DirectRLEnv):
         )
         
         log_dict = {
-            # "Episode_Reward/grasping": (rew_grasping).mean(),
-            "Episode_Reward/reaching_object": (rew_reaching * self.reward_weights["reaching_object"]).mean(),
-            "Episode_Reward/lifting_object": (rew_lifting * self.reward_weights["lifting_object"]).mean(),
-            "Episode_Reward/object_goal_tracking": (rew_goal * self.reward_weights["object_goal_tracking"]).mean(),
-            "Episode_Reward/object_goal_tracking_fine_grained": (rew_goal_fine * self.reward_weights["object_goal_tracking_fine_grained"]).mean(),
-            "Episode_Reward/action_rate": (rew_action_rate * action_rate_penalty).mean(),
-            "Episode_Reward/joint_vel": (rew_joint_vel * joint_vel_penalty).mean(),
+            # "grasping": (rew_grasping),
+            "reaching_object": (rew_reaching * self.reward_weights["reaching_object"]),
+            "lifting_object": (rew_lifting * self.reward_weights["lifting_object"]),
+            "object_goal_tracking": (rew_goal * self.reward_weights["object_goal_tracking"]),
+            "object_goal_tracking_fine_grained": (rew_goal_fine * self.reward_weights["object_goal_tracking_fine_grained"]),
+            "action_rate": (rew_action_rate * action_rate_penalty),
+            "joint_vel": (rew_joint_vel * joint_vel_penalty),
         }
-        self.logger.record("Episode_Reward/reaching_object", (rew_reaching * self.reward_weights["reaching_object"]).mean())
+
         self.extras["log"] = log_dict
+        for key, value in log_dict.items():
+            self.extras[key] = value
+        
         self.previous_actions = self.actions.clone()
         return total_reward
     
